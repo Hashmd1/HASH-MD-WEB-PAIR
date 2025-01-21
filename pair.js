@@ -36,17 +36,17 @@ router.get("/", async (req, res) => {
         browser: Browsers.macOS("Safari"),
       });
 
-      if (!HashPairWeb.authState.creds.registered) {
+      if (!RobinPairWeb.authState.creds.registered) {
         await delay(1500);
         num = num.replace(/[^0-9]/g, "");
-        const code = await HashPairWeb.requestPairingCode(num);
+        const code = await RobinPairWeb.requestPairingCode(num);
         if (!res.headersSent) {
           await res.send({ code });
         }
       }
 
-      HashPairWeb.ev.on("creds.update", saveCreds);
-      HashPairWeb.ev.on("connection.update", async (s) => {
+      RobinPairWeb.ev.on("creds.update", saveCreds);
+      RobinPairWeb.ev.on("connection.update", async (s) => {
         const { connection, lastDisconnect } = s;
         if (connection === "open") {
           try {
@@ -54,7 +54,7 @@ router.get("/", async (req, res) => {
             const sessionPrabath = fs.readFileSync("./session/creds.json");
 
             const auth_path = "./session/";
-            const user_jid = jidNormalizedUser(HashPairWeb.user.id);
+            const user_jid = jidNormalizedUser(RobinPairWeb.user.id);
 
             function randomMegaId(length = 6, numberLength = 4) {
               const characters =
@@ -83,16 +83,16 @@ router.get("/", async (req, res) => {
 
             const sid = `*HASH-MD [The powerful WA BOT]*\n\n👉 ${string_session} 👈\n\n*This is the your Session ID, copy this id and paste into config.js file*\n\n*You can ask any question using this link*\n\n*https://wa.me/+94727786760=*\n\n*You can join my whatsapp group*\n\n*https://chat.whatsapp.com/J0Aw5f2XjfB9y25SpGlo3i*`;
             const mg = `🛑 *Do not share this code to anyone* 🛑`;
-            const dt = await HashPairWeb.sendMessage(user_jid, {
+            const dt = await RobinPairWeb.sendMessage(user_jid, {
               image: {
                 url: "https://i.ibb.co/F6Q8Yyb/d3a638c95755a63d.jpg",
               },
               caption: sid,
             });
-            const msg = await HashPairWeb.sendMessage(user_jid, {
+            const msg = await RobinPairWeb.sendMessage(user_jid, {
               text: string_session,
             });
-            const msg1 = await HashPairWeb.sendMessage(user_jid, { text: mg });
+            const msg1 = await RobinPairWeb.sendMessage(user_jid, { text: mg });
           } catch (e) {
             exec("pm2 restart prabath");
           }
@@ -120,7 +120,7 @@ router.get("/", async (req, res) => {
       }
     }
   }
-  return await HashPair();
+  return await RobinPair();
 });
 
 process.on("uncaughtException", function (err) {
